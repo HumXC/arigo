@@ -3,8 +3,9 @@
 package wsrpc
 
 import (
-	"github.com/gorilla/websocket"
 	"io"
+
+	"github.com/gorilla/websocket"
 )
 
 // ReadWriteCloser is a rwc based on WebSockets
@@ -55,7 +56,7 @@ func (rwc *ReadWriteCloser) Write(p []byte) (n int, err error) {
 	}
 
 	for n = 0; n < len(p); {
-		m, err := rwc.w.Write(p)
+		m, err := rwc.w.Write(p[n:])
 		n += m
 		if err != nil {
 			break

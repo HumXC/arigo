@@ -79,7 +79,6 @@ func DialContext(ctx context.Context, url string, authToken string) (client *Cli
 	rpcClient := rpc2.NewClientWithCodec(codec)
 
 	client = NewClient(rpcClient, authToken)
-	go client.Run()
 
 	return
 }
@@ -91,10 +90,12 @@ func Dial(url string, authToken string) (client *Client, err error) {
 }
 
 // Run runs the underlying rpcClient.
-// There's no need to call this if the client
-// was created using the Dial function.
-func (c *Client) Run() {
+func (c *Client) Run() error {
+	if c.closed {
+		return errors.New("client is closed")
+	}
 	c.rpcClient.Run()
+	return nil
 }
 
 // Close closes the connection to the aria2 rpc interface.
